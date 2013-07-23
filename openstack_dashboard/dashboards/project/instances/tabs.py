@@ -63,6 +63,7 @@ class ConsoleTab(tabs.Tab):
         # Currently prefer VNC over SPICE, since noVNC has had much more
         # testing than spice-html5
         console_type = getattr(settings, 'CONSOLE_TYPE', 'AUTO')
+        console_direct_url = None
         if console_type == 'AUTO':
             try:
                 console = api.nova.server_vnc_console(request, instance.id)
@@ -96,12 +97,21 @@ class ConsoleTab(tabs.Tab):
                     console.url,
                     getattr(instance, "name", ""),
                     instance.id)
+
             except:
                 console_url = None
+            try:
+                console = api.nova.server_spice_console(request, instance.id,
+                                                        console_type='spice-http-proxy')
+                console_direct_url = console.url
+            except:
+                console_direct_url = None
         else:
             console_url = None
 
-        return {'console_url': console_url, 'instance_id': instance.id}
+        return {'console_url': console_url,
+                'console_direct_url': console_direct_url,
+                'instance_id': instance.id}
 
 
 class InstanceDetailTabs(tabs.TabGroup):

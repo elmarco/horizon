@@ -2,6 +2,9 @@
 {% load url from future %}
 
 <h3>{% trans "Instance Console" %}</h3>
+{% if console_direct_url %}
+<p class='alert alert-info'><a href="{{ console_direct_url }}"  style="text-decoration: underline">{% trans "Click here to open" %}</a></p>
+{% endif %}
 {% if console_url %}
 <p class='alert alert-info'>{% blocktrans %}If console is not responding to keyboard input: click the grey status bar below.{% endblocktrans %} <a href="{{ console_url }}"  style="text-decoration: underline">{% trans "Click here to show only console" %}</a></p>
 <iframe id="console_embed" src="{{ console_url }}" style="width:100%;height:100%"></iframe>
